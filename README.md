@@ -1,4 +1,4 @@
-# mergeSpreadsheets
+# spreadsheet-merger
 The run.sh script will merge two or more spreadsheets that you put in the
 current directory as .xml files in Excel's "XML Spreadsheet 2003" format.
 This is meant to support spreadsheets having column names that overlap with
