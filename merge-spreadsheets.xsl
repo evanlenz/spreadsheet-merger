@@ -12,9 +12,9 @@
 
   <xsl:variable name="master-column-keys" as="xs:string+">
     <xsl:for-each-group select="$input-sheets/Workbook/Worksheet/Table/Row[1]/Cell"
-                        group-by="substring-before(my:column-key(.), '$')">
+                        group-by="substring-before(my:column-key(.), $column-key-separator)">
       <xsl:for-each select="distinct-values(current-group()/my:column-key(.))">
-        <xsl:sort select="substring-after(., '$')" data-type="number" order="ascending"/>
+        <xsl:sort select="substring-after(., $column-key-separator)" data-type="number" order="ascending"/>
         <xsl:sequence select="."/>
       </xsl:for-each>
     </xsl:for-each-group>
@@ -45,7 +45,7 @@
       <Row>
         <xsl:for-each select="$master-column-keys">
           <Cell>
-            <Data ss:Type="String">{substring-before(.,'$')}</Data>
+            <Data ss:Type="String">{substring-before(., $column-key-separator)}</Data>
           </Cell>
         </xsl:for-each>
       </Row>
@@ -96,9 +96,13 @@
   <xsl:function name="my:column-key" as="xs:string">
     <xsl:param name="heading" as="element(Cell)"/>
     <xsl:sequence select="concat($heading/Data,
-                                 '$',
+                                 $column-key-separator,
                                  1 + count($heading/preceding-sibling::Cell[Data eq $heading/Data])
                                 )"/>
   </xsl:function>
+
+
+  <!-- ASSUMPTION: Your column headings do not have this string in them -->
+  <xsl:variable name="column-key-separator" select="'____$!@#$____'"/>
 
 </xsl:stylesheet>
